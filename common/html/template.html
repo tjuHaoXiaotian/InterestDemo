@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>读书笔记</title>
+    <style>
+        *{
+            margin:0;
+            padding:0;
+        }
+        /*body*/
+        body{
+            background-color: #B4DAF0;
+        }
+        /*body end*/
+
+        /*nav header*/
+        .nav-top{
+            background-color: white;
+            height:50px;
+            width:100%;
+            overflow: hidden;
+            position: fixed;
+            top:0;
+            left: 0;
+            opacity: 0.98;
+        }
+        .nav-top #logo{
+            display: inline-block;
+            width:170px;
+            float: left;
+            text-align: center;
+            background-image: url(images/logo.jpg);
+            background-repeat: no-repeat;
+            background-size: 70%;
+            background-position: center;
+            margin-top:2px;
+        }
+
+        .nav-top > ul{
+            list-style: none;
+            width: 950px;
+            margin: 0 auto;
+            height: 50px;
+            /*margin-left: 200px;*/
+        }
+        .nav-top li{
+            float: left;
+            margin:0 10px;
+            height:50px;
+        }
+        @media screen and (max-width: 1300px) { /*当屏幕尺寸小于1300px时，应用下面的CSS样式*/
+            .nav-top #search{
+                margin-left: 150px;
+            }
+            .nav-top input{
+                /*margin-top: 5px;*/
+                display: inline-block;
+                height: 28px;
+                line-height: 28px;
+                width:200px;
+                margin:5px 60px 0 0;
+            }
+        }
+
+        @media screen and (min-width: 1300px) { /*当屏幕尺寸大于1300px时，应用下面的CSS样式*/
+            .nav-top #search{
+                margin-left: 0;
+            }
+            .nav-top input{
+                /*margin-top: 5px;*/
+                display: inline-block;
+                height: 28px;
+                line-height: 28px;
+                width:350px;
+                margin:5px 60px 0 0;
+            }
+        }
+
+        .nav-top a{
+            display: block;
+            height:50px;
+            text-decoration:none;
+            font-weight: 500;
+            color: #585858;
+            margin-top:10px;
+        }
+        .nav-top a:hover{
+            color: #ff6412;
+        }
+        /*nav header end*/
+
+        /*main*/
+        .main{
+            width:950px;
+            margin:50px auto;
+        }
+
+        /*main left nav*/
+        .nav{
+            width:150px;
+            float: left;
+            margin-top: 10px;
+            background-color: #93C5E2;
+            text-indent: 1em;
+            line-height: 2em;
+            height: 800px;
+            /*opacity: 0.8;*/
+        }
+
+        .nav>ul{
+            list-style: none;
+        }
+
+        .nav a{
+            text-decoration:none;
+            color:white;
+            display: block;
+        }
+
+        .nav a:hover{
+            background-color: #B4DAF0;
+        }
+        /*main left nav end*/
+
+        /* main content right*/
+        .main > .right{
+            float: right;
+            width:270px;
+            margin-top: 10px;
+            background-color: #fff;
+            height: 800px;
+            padding:10px;
+        }
+        /* main content right end*/
+
+        /* main content list*/
+        .main>.lists{
+            width: 500px;
+            overflow: hidden;
+            margin-left: 150px;
+        }
+
+        .item{
+            background-color: #fff;
+            padding:10px;
+            margin-top: 10px;
+        }
+
+        .item > .header{
+            float: left;
+        }
+
+        .item > h4{
+            margin-left: 60px;
+        }
+
+        .item > span{
+            font-size: 12px;
+            color: #a4a4a4;
+            margin-left: 10px;
+        }
+
+        .item > p{
+            margin-left: 60px;
+            font-size: 14px;
+            line-height: 22px;
+            /*text-align: justify;*/
+        }
+        /* main content list end*/
+
+    </style>
+</head>
+<body>
+<div class="nav-top">
+    <a id="logo"></a>
+    <ul>
+        <li id="search">
+            <form><label for="search_input"></label><input id="search_input" name="search" placeholder="大家正在搜：陈赫"/></form>
+        </li>
+        <li><a href="#">我的读书笔记</a></li>
+        <!--<li><a href="#">视频</a></li>-->
+        <!--<li><a href="#">发现</a></li>-->
+        <!--<li><a href="#">游戏</a></li>-->
+        <!--<li><a href="#">不怕老婆的灰太狼</a></li>-->
+    </ul>
+</div>
+
+
+<div class="main">
+    <div class="nav">
+        <ul>
+            <li><a href="http://www.baidu.com">2017-02-17</a></li>
+            <li><a href="http://www.baidu.com">特别关注</a></li>
+            <li><a href="http://www.baidu.com">名人明星</a></li>
+            <li><a href="http://www.baidu.com">同学</a></li>
+            <li><a href="http://www.baidu.com">老乡</a></li>
+        </ul>
+    </div>
+
+    <div class="right">
+        <div>
+            圣诞节福利卡手机费送到房间爱离开时间的福利卡设计福利卡上的记录反馈说
+        </div>
+    </div>
+    <div class="lists">
+        <div class="item">
+            <img class="header" src="images/head02.jpg"/>
+            <h4>董敏笛子</h4>
+            <span> 今天 11:02 来自 网易云音乐 </span>
+            <p>
+                倘若你曾思索过自己的坎坷人生，又抑或尝试去探寻自己的前世来生？不妨沏一壶芽色的清茶，静静的沉浸在这《半壶纱》的禅意之中，想象着世间曾有过一个这样的自己……
+                <br/>
+                “半壶青茗了相思，一袭轻纱遮红尘……” 分享单曲O网页链接（@网易云音乐）
+            </p>
+        </div>
+
+        <div class="item">
+            <img class="header" src="images/head02.jpg"/>
+            <h4>董敏笛子</h4>
+            <span> 今天 11:02 来自 网易云音乐 </span>
+            <p>
+                倘若你曾思索过自己的坎坷人生，又抑或尝试去探寻自己的前世来生？不妨沏一壶芽色的清茶，静静的沉浸在这《半壶纱》的禅意之中，想象着世间曾有过一个这样的自己……
+                <br/>
+                “半壶青茗了相思，一袭轻纱遮红尘……” 分享单曲O网页链接（@网易云音乐）
+            </p>
+        </div>
+
+        <div class="item">
+            <img class="header" src="images/head02.jpg"/>
+            <h4>董敏笛子</h4>
+            <span> 今天 11:02 来自 网易云音乐 </span>
+            <p>
+                倘若你曾思索过自己的坎坷人生，又抑或尝试去探寻自己的前世来生？不妨沏一壶芽色的清茶，静静的沉浸在这《半壶纱》的禅意之中，想象着世间曾有过一个这样的自己……
+                <br/>
+                “半壶青茗了相思，一袭轻纱遮红尘……” 分享单曲O网页链接（@网易云音乐）
+            </p>
+        </div>
+    </div>
+
+
+</div>
+</body>
+</html>

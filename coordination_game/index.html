@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>coordination game</title>
+    <style>
+        *{
+            margin:0;
+            padding:0;
+        }
+        /*body*/
+        body{
+            background-color: #B4DAF0;
+        }
+        /*body end*/
+
+        /*nav header*/
+        .nav-top{
+            background-color: white;
+            height:50px;
+            line-height: 50px;
+            width:100%;
+            overflow: hidden;
+            position: fixed;
+            top:0;
+            left: 0;
+            opacity: 0.98;
+            z-index: 1;
+        }
+        .nav-top h3{
+            height:50px;
+            line-height: 50px;
+            /*width:350px;*/
+            color: #585858;
+            font-weight: 500;
+            /*margin:0 auto;*/
+            text-align: center;
+        }
+
+        .nav-top span{
+            color: red;
+        }
+
+        .nav-top > ul{
+            list-style: none;
+            width: 950px;
+            margin: 0 auto;
+            height: 50px;
+            /*margin-left: 200px;*/
+        }
+        .nav-top li{
+            float: left;
+            margin:0 10px;
+            height:50px;
+        }
+
+        .nav-top a{
+            display: block;
+            height:50px;
+            line-height:50px;
+            text-decoration:none;
+            font-weight: 500;
+            color: #585858;
+            text-align: center;
+        }
+        .nav-top a:hover{
+            color: #ff6412;
+        }
+
+        .nav-top h3:hover{
+            color: #ff6412;
+        }
+        /*nav header end*/
+
+        /*main*/
+        .main{
+            width:950px;
+            margin:50px auto;
+            padding: 10px;
+            position: relative;
+        }
+
+        .item{
+            height:600px;
+            background-color: white;
+            margin-bottom: 20px;
+        }
+
+        table{
+            border: 1px solid #93C5E2;
+            position: absolute;
+            top:20px;
+            right: 20px;
+        }
+
+        td{
+            border: 1px solid #93C5E2;
+            width:40px;
+            height:40px;
+            text-align: center;
+        }
+        /* main content list end*/
+
+        /* svg start */
+
+        .linetext {
+            font-size: 12px ;
+            /*font-family: SimSun;*/
+            /*fill:#0000FF;*/
+            fill-opacity:0.0;
+        }
+
+
+
+        /* 坐标轴*/
+
+        .axis path,
+        .axis line{
+            fill: none;
+            stroke: black;
+            shape-rendering: crispEdges;
+        }
+
+        .axis text {
+            font-family: sans-serif;
+            font-size: 11px;
+        }
+        /* svg end */
+
+
+
+
+    </style>
+</head>
+<body>
+<div class="nav-top">
+
+
+    <ul>
+        <li><h3>coordination game<span class="information"></span></h3></li>
+        <li><a href="#">我的读书笔记</a></li>
+        <li><a href="#">视频</a></li>
+        <li><a href="#">发现</a></li>
+        <li><a href="#">游戏</a></li>
+        <li><a href="#">不怕老婆的灰太狼</a></li>
+    </ul>
+</div>
+
+
+<div class="main">
+    <div class="item item1">
+
+    </div>
+
+    <div class="item item2">
+
+    </div>
+</div>
+
+
+<script type="text/javascript" src="../common/js/vendar/jquery/jquery1.9.0.js"></script>
+<script type="text/javascript" src="../common/js/vendar/d3/d3.v3.min.js"></script>
+
+<script type="text/javascript">
+
+    $(document).ready(function(){
+        var width = 950;  //画布的宽度
+        var height = 600;   //画布的高度
+        var delta = 50;
+        var nodes_r = 20;
+        var svg = d3.select(".item1")     //选择文档中的body元素
+                .append("svg")          //添加一个svg元素
+                .attr("width", width)       //设定宽度
+                .attr("height", height);    //设定高度
+
+
+        var sheet = d3.select(".item2")     //选择文档中的body元素
+                .append("svg")          //添加一个svg元素
+                .attr("width", width)       //设定宽度
+                .attr("height", height);    //设定高度
+
+
+        var index = [0, 1, 2, 3, 4,5,6,7];
+        var color = ["#0310FF", "#D605FF", "#FF1A1F", "#FF6F12", "#FFEC04","#93FF16","#0BFFF1"];
+        var ordinal = d3.scale.ordinal()
+                .domain(index)
+                .range(color);
+
+        //定义比例尺
+//        var linear2 = d3.scale.linear()
+//                .domain([0, 100])
+//                .range([0, width-40]);
+
+
+
+//        var linear3 = d3.scale.linear()
+//                .domain([0, 7])
+//                .range([height-50,0]);
+
+        var xScale = d3.scale.ordinal()
+                .domain(d3.range(50))
+                .rangeRoundBands([0, width - 40]);
+
+        var yScale = d3.scale.ordinal()
+                .domain(d3.range(7))
+                .rangeRoundBands([height-50,0]);
+
+        var axis = d3.svg.axis()
+                .scale(xScale)      //指定比例尺
+                .orient("bottom")   //指定刻度的方向
+                .ticks(100);          //指定刻度的数量
+
+        //定义y轴
+        var yAxis = d3.svg.axis()
+                .scale(yScale)
+                .orient("left");
+
+        sheet.append("g")
+                .attr("class","axis")
+                .attr("transform","translate(20,"+(height-25)+")")
+                .call(axis);
+
+        sheet.append("g")
+                .attr("class","axis")
+                .attr("transform","translate(20,25)")
+                .call(yAxis);
+
+
+        var rec = sheet.append("rect")
+                .attr("class","MyRect")
+                .attr("transform","translate(" + 20 + "," + 25 + ")")
+                .attr("x", xScale(0))
+                .attr("y",yScale(1))
+                .attr("width", xScale.rangeBand())
+                .attr("height", yScale.rangeBand())
+                .style("fill",ordinal(1));
+
+        //添加文字元素
+        var texts = sheet
+                .append("text")
+                .attr("class","MyText")
+                .attr("transform","translate(" + 20 + "," + 25 + ")")
+                .attr("x", xScale(0))
+                .attr("y",yScale(1))
+                .attr("dx",function(){
+//                    return (xScale.rangeBand())/2;
+                    return 0;
+                })
+                .attr("dy",function(d){
+                    return (yScale.rangeBand())/2;
+                })
+                .text("20");
+
+        var linear = d3.scale.linear()
+                .domain([0,2])
+                .range([delta,height-delta]);
+
+        var diagonal = d3.svg.diagonal()
+//            .projection(function(d) { return [d.y, d.x]; });
+                .projection(function(d) { return [d.x, d.y+10]; });
+        d3.json("relation.json",function(error,root){
+            if( error ){
+                return console.log(error);
+            }
+            console.log(root);
+
+
+    //      其中 linkDistance 是结点间的距离，
+    //      charge 是定义结点间是吸引（值为正）还是互斥（值为负），值越大力越强。
+   //       linkStrength： 指定连接线的坚硬度，值的范围为[ 0 , 1 ]，值越大越坚硬。
+   //       gravity：以 size 函数设定的中心产生重力，各顶点都会向中心运动，默认值为0.1。也可以设定为0，则没有重力的作用。
+            var force = d3.layout.force()
+                    .nodes(root.nodes)
+                    .links(root.edges)
+                    .size([width,height])
+                    .linkDistance(200)
+                    .linkStrength(0.8)
+                    .gravity(0.1)
+                    .charge(-1500)
+                    .start();
+
+            // 添加连线
+            var svg_edges = svg.selectAll("line")
+                    .data(root.edges)
+                    .enter()
+                    .append("line")
+                    .style("stroke","#aaa")
+                    .style("stroke-width",2);
+
+            var color = d3.scale.category20();
+
+            //添加节点
+            var svg_nodes = svg.selectAll("circle")
+                    .data(root.nodes)
+                    .enter()
+                    .append("circle")
+                    .attr("r",nodes_r)
+                    .style("fill",function(d,i){
+                        return color(i);
+                    })
+                    .call(force.drag);  //使得节点能够拖动
+
+            //添加描述节点的文字
+            var svg_texts = svg.selectAll("text")
+                    .data(root.nodes)
+                    .enter()
+                    .append("text")
+                    .style("fill", "black")
+                    .attr("dx", 20)
+                    .attr("dy", 8)
+                    .text(function(d){
+                        return d.name;
+                    });
+
+
+            force.on("tick", function(){ //对于每一个时间间隔
+
+                //限制结点的边界
+                root.nodes.forEach(function(d,i){
+                    d.x = d.x - nodes_r < 0     ? nodes_r : d.x ;
+                    d.x = d.x + nodes_r > width ? width - nodes_r : d.x ;
+                    d.y = d.y - nodes_r < 0      ? nodes_r : d.y ;
+                    d.y = d.y + nodes_r > height ? height - nodes_r : d.y ;
+                });
+
+                //更新连线坐标
+                svg_edges.attr("x1",function(d){ return d.source.x; })
+                        .attr("y1",function(d){ return d.source.y; })
+                        .attr("x2",function(d){ return d.target.x; })
+                        .attr("y2",function(d){ return d.target.y; });
+
+                //更新节点坐标
+                svg_nodes.attr("cx",function(d){ return d.x; })
+                        .attr("cy",function(d){ return d.y; });
+
+                //更新文字坐标
+                svg_texts.attr("x", function(d){ return d.x; })
+                        .attr("y", function(d){ return d.y; });
+            });
+
+
+
+        });
+    })
+</script>
+</body>
+</html>

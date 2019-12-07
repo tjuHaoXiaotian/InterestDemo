@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Single Q-Learning</title>
+    <style>
+        *{
+            margin:0;
+            padding:0;
+        }
+        /*body*/
+        body{
+            background-color: #B4DAF0;
+        }
+        /*body end*/
+
+        /*nav header*/
+        .nav-top{
+            background-color: white;
+            height:50px;
+            line-height: 50px;
+            width:100%;
+            overflow: hidden;
+            position: fixed;
+            top:0;
+            left: 0;
+            opacity: 0.98;
+			z-index:1000;
+        }
+        .nav-top h3{
+            height:50px;
+            line-height: 50px;
+            width:350px;
+            color: #585858;
+            font-weight: 500;
+            margin:0 auto;
+            text-align: center;
+        }
+
+        .nav-top span{
+            color: red;
+        }
+
+        .nav-top h3:hover{
+            color: #ff6412;
+        }
+        /*nav header end*/
+
+        /*main*/
+        .main{
+            width:950px;
+            margin:50px auto;
+            padding: 10px;
+            position: relative;
+        }
+
+        .item{
+            height:600px;
+            background-color: white;
+        }
+
+        table{
+            border: 1px solid #93C5E2;
+            position: absolute;
+            top:20px;
+            right: 20px;
+        }
+
+        td{
+            border: 1px solid #93C5E2;
+            width:40px;
+            height:40px;
+            text-align: center;
+        }
+        /* main content list end*/
+
+
+    </style>
+</head>
+<body>
+<div class="nav-top">
+   <h3>Single Q-Learning：<span class="information"></span></h3>
+</div>
+
+
+<div class="main">
+    <div class="item">
+
+    </div>
+
+    <table id="q-table">
+        <tr>
+            <td colspan="7" class="header">Q TABLE</td>
+        </tr>
+    </table>
+</div>
+
+
+<script type="text/javascript" src="../../common/js/vendar/jquery/jquery1.9.0.js"></script>
+<script type="text/javascript" src="../../common/js/vendar/d3/d3.v3.min.js"></script>
+
+<script type="text/javascript" src="singleQ.js"></script>
+<script type="text/javascript">
+
+    $(document).ready(function(){
+        var width = 800;  //画布的宽度
+        var height = 600;   //画布的高度
+        var delta = 50;
+
+        var svg = d3.select(".item")     //选择文档中的body元素
+                .append("svg")          //添加一个svg元素
+                .attr("width", width)       //设定宽度
+                .attr("height", height);    //设定高度
+
+        var linear = d3.scale.linear()
+                .domain([0,2])
+                .range([delta,height-delta]);
+
+        var diagonal = d3.svg.diagonal()
+//            .projection(function(d) { return [d.y, d.x]; });
+                .projection(function(d) { return [d.x, d.y+10]; });
+
+
+        // 5 个状态
+        var stateNum = 6;
+
+        // 初始化节点
+        initNodes(stateNum);
+
+        // 设计各个结点的位置，及节点间关系
+        // 要注意，在 SVG 中，x 轴的正方向是水平向右，y 轴的正方向是垂直向下的。
+        states[0].setX(0);
+        states[0].setY(2);
+        states[0].addChild(states[4]);
+        states[0].addChild(states[2]);
+
+        states[1].setX(1);
+        states[1].setY(0);
+        states[1].addChild(states[2]);
+        states[1].addChild(states[3]);
+        states[1].addChild(states[5]);
+
+        states[2].setX(0);
+        states[2].setY(1);
+        states[2].addChild(states[3]);
+        states[2].addChild(states[0]);
+        states[2].addChild(states[1]);
+
+        states[3].setX(1);
+        states[3].setY(1);
+        states[3].addChild(states[1]);
+        states[3].addChild(states[2]);
+        states[3].addChild(states[4]);
+
+        states[4].setX(1);
+        states[4].setY(2);
+        states[4].addChild(states[0]);
+        states[4].addChild(states[3]);
+        states[4].addChild(states[5]);
+
+        states[5].setX(2);
+        states[5].setY(1);
+        states[5].setTarget();  // 设置其为目标结点
+        states[5].setReward(100);  // 设置其 reward
+        states[5].addChild(states[1]);
+        states[5].addChild(states[4]);
+        states[5].addChild(states[5]);
+
+
+        // 初始化布局图形
+        initPicture();
+
+//    var body = d3.select("body"); //选择文档中的body元素
+//    var info = body.select(".information");      //选择body中的第一个p元素
+//    var p = body.selectAll("p");    //选择body中的所有p元素
+
+        initQTable(stateNum,stateNum);
+        setExploreRate();
+        training(stateNum);
+
+        function initPicture(){
+            var circle;
+            states.forEach(function(value,index,array){
+                drawLine(value);
+                value.setIndex(index)
+            });
+
+            states.forEach(function(value,index,array){
+
+                circle = svg.append("circle")
+                        .attr("cx", linear(value.graphic.x))
+                        .attr("cy", linear(value.graphic.y))
+                        .attr("r", value.graphic.radius)
+                        .style("fill","orange");
+                var text = svg.append("text")
+                        .attr("x", linear(value.graphic.x)-5)
+                        .attr("y", linear(value.graphic.y)+7)
+                        .style("fill", "white")
+                        .text(value.index);
+
+                var score = svg.append("text")
+                        .attr("x", linear(value.graphic.x))
+                        .attr("dx", 5)
+                        .attr("y", linear(value.graphic.y)-(value.graphic.radius))
+                        .style("font-size", "25px")
+                        .style("font-weight", "800")
+                        .style("fill", "orange")
+//                        .attr("")
+                        .text(-1);
+                if(index == stateNum-1){
+                    circle.style("fill","red");
+                    text.text(value.index+":target")
+                        .attr("dx", linear(value.graphic.x)-27);
+                    score.text("+100")
+                }
+
+
+                circles.push(circle);
+            });
+        }
+
+        function drawLine(node){
+            var x1 = node.graphic.x,y1 = node.graphic.y;
+            node.getChildren() .forEach(function(value, index, array) {
+                var line = svg.append("line")
+                        .attr("x1",linear(x1))
+                        .attr("y1",linear(y1))
+                        .attr("x2",linear(value.graphic.x))
+                        .attr("y2",linear(value.graphic.y))
+                        .attr("stroke","red")
+                        .attr("stroke-width",3)
+            });
+        }
+    })
+</script>
+</body>
+</html>
